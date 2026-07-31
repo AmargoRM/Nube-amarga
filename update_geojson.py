@@ -1,7 +1,12 @@
 import os
+import sys
 import psycopg2
 
-conn = psycopg2.connect(os.environ["NEON_URL"])
+neon_url = os.environ.get("NEON_URL", "").strip()
+if not neon_url:
+    sys.exit("ERROR: la variable de entorno NEON_URL está vacía o no está definida. Configurá el secreto NEON_URL en Settings > Secrets and variables > Actions.")
+
+conn = psycopg2.connect(neon_url)
 cur = conn.cursor()
 cur.execute('''
 SELECT jsonb_build_object(
